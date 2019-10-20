@@ -50,14 +50,22 @@
                                     <span class="fas fa-sign-in-alt"></span> {{ __('Login') }}
                                 </a>
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">
-                                        <span class="fas fa-user"></span> {{ __('Register') }}
-                                    </a>
-                                </li>
-                            @endif
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('customer') }}">
+                                    <span class="fas fa-users"></span> Customers
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('product') }}">
+                                    <span class="fas fa-box-open"></span> Products
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('supplier') }}">
+                                    <span class="fas fa-truck"></span> Supplier
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <span class="fas fa-user-circle"></span> {{ Auth::user()->name }} <span class="caret"></span>

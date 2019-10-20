@@ -39,11 +39,11 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'full_name' => ['required', 'unique:customers'],
+            'name' => ['required', 'unique:customers'],
         ]);
 
         $customer = new Customer([
-            "full_name" => $request['full_name']
+            "name" => $request['name']
         ]);
 
         $customer->save();
@@ -56,9 +56,10 @@ class CustomerController extends Controller
      * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show($id)
     {
-        //
+        $customer = Customer::find($id);
+        return view('customer.show', compact('customer'));
     }
 
     /**
@@ -79,9 +80,17 @@ class CustomerController extends Controller
      * @param  \App\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'unique:customers,name,'.$id],
+        ]);
+
+        $customer = Customer::find($id);
+        $customer->name = $request->get('name');
+
+        $customer->save();
+        return redirect()->route('customer.index')->with('customer_success_status', 'Customer Updated');
     }
 
     /**
@@ -103,8 +112,8 @@ class CustomerController extends Controller
     }
 
     public function deleteSelected(Request $request){
-        $ids = $request->ids;
-        DB::table("customers")->whereIn('id',explode(",",$ids))->delete();
-        return response()->json(['success'=>"Customer(s) Deleted successfully."]);
+        $ids = $request['customer_checkbox'];
+        DB::table("customers")->whereIn('id',$ids)->delete();
+        return redirect()->route('customer.index')->with('customer_success_status', 'Customer(s) Deleted');
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductStockHistory;
+use App\Transaction;
 use Illuminate\Http\Request;
 
-class ProductStockHistoryController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class ProductStockHistoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ProductStockHistory  $productStockHistory
+     * @param  \App\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function show(ProductStockHistory $productStockHistory)
+    public function show(Transaction $transaction)
     {
         //
     }
@@ -52,10 +52,10 @@ class ProductStockHistoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\ProductStockHistory  $productStockHistory
+     * @param  \App\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductStockHistory $productStockHistory)
+    public function edit(Transaction $transaction)
     {
         //
     }
@@ -64,10 +64,10 @@ class ProductStockHistoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ProductStockHistory  $productStockHistory
+     * @param  \App\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductStockHistory $productStockHistory)
+    public function update(Request $request, Transaction $transaction)
     {
         //
     }
@@ -75,16 +75,11 @@ class ProductStockHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ProductStockHistory  $productStockHistory
+     * @param  \App\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductStockHistory $productStockHistory)
+    public function destroy(Transaction $transaction)
     {
         //
-    }
-
-    public function clearHistory(){
-        ProductStockHistory::whereNotNull('id')->delete();    
-        return redirect()->route('product.index')->with('stock_history_success_status', 'Histories Cleared');
     }
 }

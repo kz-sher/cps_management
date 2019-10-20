@@ -12,17 +12,22 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	if (Auth::check()){
+		return view('main');
+	}
+    return view('auth.login');
 });
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Auth::routes([ 'register' => false ]);
 
 Route::resource('main','MainController');
 Route::resource('customer','CustomerController');
 Route::resource('product','ProductController');
+Route::resource('supplier','SupplierController');
 
 Route::delete('customerDeleteSelected', 'CustomerController@deleteSelected');
 Route::delete('productDeleteSelected', 'ProductController@deleteSelected');
+Route::delete('supplierDeleteSelected', 'SupplierController@deleteSelected');
 Route::delete('clearStockHistory', 'ProductStockHistoryController@clearHistory');
+
+Route::patch('importProduct/{id}', 'ProductController@importProduct');

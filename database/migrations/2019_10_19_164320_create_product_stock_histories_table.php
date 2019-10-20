@@ -17,7 +17,8 @@ class CreateProductStockHistoriesTable extends Migration
             $table->bigIncrements('id');
             $table->string('person_involved');
             $table->string('stock_status');
-            $table->integer('amount');
+            $table->string('stock_amount_status');
+            $table->integer('stock_amount');
             $table->timestamps();
         });
     }
