@@ -34,15 +34,15 @@
 $(document).ready(function() {
 
     $('#customers').click(function(){
-        window.location.href='./customer';
+        window.location.href='./customers';
     });
 
     $('#products').click(function(){
-        window.location.href='./product';
+        window.location.href='./products';
     });
 
     $('#suppliers').click(function(){
-        window.location.href='./supplier';
+        window.location.href='./suppliers';
     });
 
 });

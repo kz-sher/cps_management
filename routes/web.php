@@ -21,13 +21,17 @@ Route::get('/', function () {
 Auth::routes([ 'register' => false ]);
 
 Route::resource('main','MainController');
-Route::resource('customer','CustomerController');
-Route::resource('product','ProductController');
-Route::resource('supplier','SupplierController');
+Route::resource('customers','CustomerController');
+Route::resource('products','ProductController');
+Route::resource('suppliers','SupplierController');
+Route::resource('customers/{customer}/transactions','CustomerTransactionController');
+Route::resource('suppliers/{supplier}/transactions','SupplierTransactionController');
 
 Route::delete('customerDeleteSelected', 'CustomerController@deleteSelected');
 Route::delete('productDeleteSelected', 'ProductController@deleteSelected');
 Route::delete('supplierDeleteSelected', 'SupplierController@deleteSelected');
+Route::delete('customerTransactionDeleteSelected', 'CustomerTransactionController@deleteSelected');
+Route::delete('supplierTransactionDeleteSelected', 'SupplierTransactionController@deleteSelected');
 Route::delete('clearStockHistory', 'ProductStockHistoryController@clearHistory');
 
 Route::patch('importProduct/{id}', 'ProductController@importProduct');

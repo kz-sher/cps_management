@@ -13,7 +13,7 @@
                         <a href="{{ url('/main') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <a href="{{ url('/customer') }}">Customers</a>
+                        <a href="{{ url('/customers') }}">Customers</a>
                     </li>
                 </ol>
             </nav>
@@ -66,7 +66,7 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        <form method="post" action="{{ url('customer') }}" id="add_customer_form">
+                        <form method="post" action="{{ url('customers') }}" id="add_customer_form">
                           {{ csrf_field() }}
                           <div class="form-group">
                             <label for="customer_name" class="col-form-label">Customer Name:</label>
@@ -88,7 +88,7 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Customer - <span id="update_customer_modal_box_label"></span></h5>
+                        <h5 class="modal-title">Edit Customer - <span id="update_customer_modal_box_label"></span></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -98,8 +98,8 @@
                           @method('patch')
                           @csrf
                           <div class="form-group">
-                            <label for="curr_customer_name" class="col-form-label">Customer Name:</label>
-                            <input type="text" name="name" class="form-control" id="curr_customer_name">
+                            <label for="update_customer_name" class="col-form-label">Customer Name:</label>
+                            <input type="text" name="name" class="form-control" id="update_customer_name">
                           </div>
                         </form>
                       </div>
@@ -116,7 +116,7 @@
                 <form method=post action="{{ url('customerDeleteSelected') }}" id="customer_list_form">
                     @method('delete')
                     @csrf
-                    <table class="table table-bordered table-hover shadow-sm" id="customer_table">
+                    <table class="table table-bordered table-hover table-responsive-lg shadow-sm" id="customer_table">
                         <thead class="thead-dark">
                             <tr>
                                 <th width="5%">
@@ -175,8 +175,10 @@ $( document ).ready(function() {
     // Delete button outside the form
     $('#customer_bulk_delete_button').on('click', function(e) {
         if( $('.customer_checkbox:checked').length > 0){
-            $('.full-spinner-loader').click();
-            $('#customer_list_form').submit();
+            if(confirm('Are you sure you want to delete all selected data?')){
+                $('.full-spinner-loader').click();
+                $('#customer_list_form').submit();
+            }
         }
         else{
             alert('Please select at least one customer!');
@@ -186,7 +188,6 @@ $( document ).ready(function() {
     // Disable delete button if no entry found
     if( $('#customer_table').find('.customer_checkbox').length === 0 ){
         $('#customer_bulk_delete_button').attr('disabled', true);
-        $('#customer_bulk_delete_button').css('cursor', 'not-allowed');
     }
 
     // Update button that open the update modal box
@@ -195,7 +196,7 @@ $( document ).ready(function() {
         var url = $(this).attr('data-url');
         var customer_name = $('#customer_name' + id).html();
 
-        $('#curr_customer_name').val(customer_name);
+        $('#update_customer_name').val(customer_name);
         $('#update_customer_modal_box_label').html(customer_name);
         $('#update_customer_form').attr('action', url);
     });

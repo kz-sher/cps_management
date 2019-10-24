@@ -13,7 +13,7 @@
                         <a href="{{ url('/main') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <a href="{{ url('/product') }}">Products</a>
+                        <a href="{{ url('/products') }}">Products</a>
                     </li>
                 </ol>
             </nav>
@@ -21,16 +21,16 @@
             <!-- Product Section -->
 
             <div id="product_inventory">
-                @if (session('product_success_status'))
+                @if (session('customer_transaction_success_status'))
                     <div class="alert alert-success" role="alert">
-                        {{ session('product_success_status') }}
+                        {{ session('customer_transaction_success_status') }}
                     </div>
                 @endif
 
                 @if(count($errors) > 0)
                     <div class="alert alert-danger" role="alert">
                         @foreach($errors->all() as $error)
-                            {{ $error }}
+                            {{ $error }}<br>
                         @endforeach
                     </div>
                 @endif
@@ -70,7 +70,7 @@
                           {{ csrf_field() }}
                           <div class="form-group">
                             <label for="new_product_name" class="col-form-label">Product Name:</label>
-                            <input type="text" name="prod_name" class="form-control" id="new_product_name">
+                            <input type="text" name="new_prod_name" class="form-control" id="new_product_name">
                           </div>
                         </form>
                       </div>
@@ -88,7 +88,7 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Product - <span id="update_product_modal_box_label"></span></h5>
+                        <h5 class="modal-title">Edit Product - <span id="update_product_modal_box_label"></span></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -98,12 +98,12 @@
                           @method('patch')
                           @csrf
                           <div class="form-group">
-                            <label for="curr_product_name" class="col-form-label">Product Name:</label>
-                            <input type="text" name="prod_name" class="form-control" id="curr_product_name">
+                            <label for="update_product_name" class="col-form-label">Product Name:</label>
+                            <input type="text" name="update_prod_name" class="form-control" id="update_product_name">
                           </div>
                           <div class="form-group">
-                            <label for="curr_product_stock_amount" class="col-form-label">Stock Amount:</label>
-                            <input type="number" name="curr_stock" class="form-control" id="curr_product_stock_amount" value=0>
+                            <label for="update_product_stock_amount" class="col-form-label">Stock Amount:</label>
+                            <input type="number" name="update_stock" class="form-control" id="update_product_stock_amount" value=0>
                           </div>
                         </form>
                       </div>
@@ -121,7 +121,9 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Import Product - <span id="import_product_modal_box_label"></span></h5>
+                        <h5 class="modal-title">
+                            Import Product - <span id="import_product_modal_box_label"></span>
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -131,10 +133,15 @@
                           @method('patch')
                           @csrf
                           <div class="form-group">
-                            <label for="supplier" class="col-form-label">Supplier:</label>
+                            <label for="supplier" class="col-form-label">
+                                Supplier:
+                                <span data-toggle="tooltip" data-placement="right" title="Please add at least one supplier under supplier list">
+                                <i class="ml-1 fas fa-info-circle"></i>
+                            </span>
+                            </label>
                             <select type="text" name="supplier" class="form-control" id="supplier">
                                 @if (count($suppliers) === 0)
-                                    <option>No option</option>
+                                    <option id="no_supplier">No option</option>
                                 @endif
                                 @foreach ($suppliers as $supplier)
                                     <option value="{{ $supplier['id'] }}">{{ $supplier['name'] }}</option>
@@ -149,7 +156,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" onclick="document.getElementById('import_product_form').submit();"class="btn btn-purple full-spinner-loader">Save</button>
+                        <button type="submit" onclick="document.getElementById('import_product_form').submit();" class="btn btn-purple full-spinner-loader" id="import_product_form_button">Save</button>
                       </div>
                     </div>
                   </div>
@@ -159,7 +166,7 @@
                 <form method=post action="{{ url('productDeleteSelected') }}" id="product_list_form">
                     @method('delete')
                     @csrf
-                    <table class="table table-bordered table-hover shadow-sm" id="product_table">
+                    <table class="table table-bordered table-hover table-responsive-lg shadow-sm" id="product_table">
                         <thead class="thead-dark">
                             <tr>
                                 <th width="5%">
@@ -225,13 +232,21 @@
                     </div>
                 </div>
 
-                <table class="table table-bordered shadow-sm" id="stock_history_table">
+                <table class="table table-bordered table-responsive-lg shadow-sm text-center" id="stock_history_table">
                     <thead class="thead-dark">
                         <tr>
-                            <th>Date</th>
-                            <th>Person</th>
-                            <th>Stock Status</th>
-                            <th>Stock Amount</th>
+                            <th rowspan="2" class="align-middle" width="15%">Date</th>
+                            <th colspan="2">Product</th>
+                            <th rowspan="2" class="align-middle">Status</th>
+                            <th rowspan="2" class="align-middle">Person</th>
+                            <th colspan="3" width="33.3%">Amount</th>
+                        </tr>
+                        <tr class="text-center">
+                            <th colspan="1">Old</th>
+                            <th colspan="1">New</th>
+                            <th colspan="1">Original</th>
+                            <th colspan="1">Update</th>
+                            <th colspan="1">Current</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
@@ -243,16 +258,20 @@
                         @foreach ($product_stock_histories as $row)
                             <tr class="history_entry">
                                 <td>{{ $row['created_at'] }}</td>
-                                <td>{{ $row['person_involved'] }}</td>
+                                <td>{{ $row['old_prod_name'] }}</td>
+                                <td>{{ $row['new_prod_name'] }}</td>
                                 <td>{{ $row['stock_status'] }}</td>
+                                <td>{{ $row['person_involved'] }}</td>
+                                <td>{{ $row['original_stock_amount'] }}</td>
                                 <td>
-                                    {{ $row['stock_amount'] }}
+                                    {{ $row['update_stock_amount'] }}
                                     @if ($row['stock_amount_status'] === 'up')
                                         <strong class="text-success"> (+)</strong>
                                     @else
                                         <strong class="text-danger"> (-)</strong>
                                     @endif
                                 </td>
+                                <td>{{ $row['curr_stock_amount'] }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -281,8 +300,10 @@ $( document ).ready(function() {
     // Delete button outside the form
     $('#product_bulk_delete_button').on('click', function(e) {
         if( $('.product_checkbox:checked').length > 0){
-            $('.full-spinner-loader').click();
-            $('#product_list_form').submit();
+            if(confirm('Are you sure you want to delete all selected data?')){
+                $('.full-spinner-loader').click();
+                $('#product_list_form').submit();
+            }
         }
         else{
             alert('Please select at least one product!');
@@ -298,7 +319,6 @@ $( document ).ready(function() {
     // Disable clear history button if no entry found
     if( $('#stock_history_table').find('.history_entry').length === 0 ){
         $('.btn-orange').attr("disabled", true);
-        $('.btn-orange').css('cursor', 'not-allowed');
     }
 
     // Update button that open the update modal box
@@ -308,8 +328,8 @@ $( document ).ready(function() {
         var product_name = $('#product_name' + id).html();
         var product_stock = $('#product_stock' + id).html();
 
-        $('#curr_product_name').val(product_name);
-        $('#curr_product_stock_amount').val(product_stock);
+        $('#update_product_name').val(product_name);
+        $('#update_product_stock_amount').val(product_stock);
         $('#update_product_modal_box_label').html(product_name);
         $('#update_product_form').attr('action', url);
     });
@@ -318,12 +338,19 @@ $( document ).ready(function() {
     $('.import_product_modal_button').click(function(){
         var id = $(this).attr('data-id');
         var url = $(this).attr('data-url');
-        console.log(url);
         var product_name = $('#product_name' + id).html();
 
         $('#import_product_modal_box_label').html(product_name);
         $('#import_product_form').attr('action', url);
+
+        // If no supplier found, disable the save button
+        if($('#no_supplier').length > 0){
+            $('#import_product_form_button').attr("disabled", true);
+        }
     });
+
+    // Enable Tooltips    
+    $('[data-toggle="tooltip"]').tooltip();   
 
 });
 </script>

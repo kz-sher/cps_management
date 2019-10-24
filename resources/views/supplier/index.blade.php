@@ -13,7 +13,7 @@
                         <a href="{{ url('/main') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <a href="{{ url('/supplier') }}">Suppliers</a>
+                        <a href="{{ url('/suppliers') }}">Suppliers</a>
                     </li>
                 </ol>
             </nav>
@@ -66,7 +66,7 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                        <form method="post" action="{{ url('supplier') }}" id="add_supplier_form">
+                        <form method="post" action="{{ url('suppliers') }}" id="add_supplier_form">
                           {{ csrf_field() }}
                           <div class="form-group">
                             <label for="supplier_name" class="col-form-label">Supplier Name:</label>
@@ -88,7 +88,7 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Supplier - <span id="update_supplier_modal_box_label"></span></h5>
+                        <h5 class="modal-title">Edit Supplier - <span id="update_supplier_modal_box_label"></span></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -116,7 +116,7 @@
                 <form method=post action="{{ url('supplierDeleteSelected') }}" id="supplier_list_form">
                     @method('delete')
                     @csrf
-                    <table class="table table-bordered table-hover shadow-sm" id="supplier_table">
+                    <table class="table table-bordered table-hover table-responsive-lg shadow-sm" id="supplier_table">
                         <thead class="thead-dark">
                             <tr>
                                 <th width="5%">
@@ -142,9 +142,9 @@
                                         <a class="btn btn-success update_supplier_modal_button" data-toggle="modal" data-target="#update_supplier_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('SupplierController@update', $row['id']) }}">
                                             <i class="fas fa-edit text-white"></i>
                                         </a>
-                                        <!-- <a class="btn btn-report update_supplier_modal_button" href="{{ action('SupplierController@show', $row['id']) }}">
+                                        <a class="btn btn-purple update_supplier_modal_button" href="{{ action('SupplierController@show', $row['id']) }}">
                                             <i class="fas fa-chart-line text-white"></i>
-                                        </a> -->
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -175,8 +175,13 @@ $( document ).ready(function() {
     // Delete button outside the form
     $('#supplier_bulk_delete_button').on('click', function(e) {
         if( $('.supplier_checkbox:checked').length > 0){
-            $('.full-spinner-loader').click();
-            $('#supplier_list_form').submit();
+            if(confirm('Are you sure you want to delete all selected data?')){
+                $('.full-spinner-loader').click();
+                $('#supplier_list_form').submit();
+            }
+            else{
+                return false;
+            }
         }
         else{
             alert('Please select at least one supplier!');
@@ -186,7 +191,6 @@ $( document ).ready(function() {
     // Disable delete button if no entry found
     if( $('#supplier_table').find('.supplier_checkbox').length === 0 ){
         $('#supplier_bulk_delete_button').attr('disabled', true);
-        $('#supplier_bulk_delete_button').css('cursor', 'not-allowed');
     }
 
     // Update button that open the update modal box

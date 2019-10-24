@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use App\Product;
+use App\CustomerTransaction;
 use Illuminate\Http\Request;
 use DB;
 
@@ -47,7 +48,7 @@ class CustomerController extends Controller
         ]);
 
         $customer->save();
-        return redirect()->route('customer.index')->with('customer_success_status', 'Customer Added');
+        return redirect()->back()->with('customer_success_status', 'Customer Added');
     }
 
     /**
@@ -59,7 +60,9 @@ class CustomerController extends Controller
     public function show($id)
     {
         $customer = Customer::find($id);
-        return view('customer.show', compact('customer'));
+        $products = Product::all()->toArray();
+        $customer_transactions = CustomerTransaction::where('customer_id', $id)->get()->toArray();
+        return view('customer.show', compact('customer', 'products', 'customer_transactions'));
     }
 
     /**
@@ -90,7 +93,7 @@ class CustomerController extends Controller
         $customer->name = $request->get('name');
 
         $customer->save();
-        return redirect()->route('customer.index')->with('customer_success_status', 'Customer Updated');
+        return redirect()->back()->with('customer_success_status', 'Customer Updated');
     }
 
     /**
@@ -101,19 +104,12 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        // dd($id);
-        // $ids = $request->ids;
-        // DB::table("products")->whereIn('id',explode(",",$ids))->delete();
-        // return response()->json(['success'=>"Products Deleted successfully."]);
-        // dd($request); 
-        // $customer = Customer::all()->find($id);
-        // $customer->delete();
-        // return redirect()->route('main.index')->with('customer_danger_status', 'Customer Deleted');
+        //
     }
 
     public function deleteSelected(Request $request){
         $ids = $request['customer_checkbox'];
         DB::table("customers")->whereIn('id',$ids)->delete();
-        return redirect()->route('customer.index')->with('customer_success_status', 'Customer(s) Deleted');
+        return redirect()->back()->with('customer_success_status', 'Customer(s) Deleted');
     }
 }

@@ -33,11 +33,15 @@
 }
 
 .btn-purple{
-    background-color: mediumpurple;
+    background-color: #7447d1;
     color: white;
 }
 
 .btn-purple:hover{
     background-color: rebeccapurple;
     color: white;
+}
+
+button:disabled{
+    cursor: not-allowed;
 }

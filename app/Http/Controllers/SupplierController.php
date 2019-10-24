@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Supplier;
+use App\Product;
+use App\SupplierTransaction;
 use Illuminate\Http\Request;
 use DB;
 
@@ -46,7 +48,7 @@ class SupplierController extends Controller
         ]);
 
         $supplier->save();
-        return redirect()->route('supplier.index')->with('supplier_success_status', 'Supplier Added');
+        return redirect()->back()->with('supplier_success_status', 'Supplier Added');
     }
 
     /**
@@ -55,9 +57,12 @@ class SupplierController extends Controller
      * @param  \App\Supplier  $supplier
      * @return \Illuminate\Http\Response
      */
-    public function show(Supplier $supplier)
+    public function show($id)
     {
-        //
+        $supplier = Supplier::find($id);
+        $products = Product::all()->toArray();
+        $supplier_transactions = SupplierTransaction::where('supplier_id', $id)->get()->toArray();
+        return view('supplier.show', compact('supplier', 'products', 'supplier_transactions'));
     }
 
     /**
@@ -88,7 +93,7 @@ class SupplierController extends Controller
         $supplier->name = $request->get('name');
 
         $supplier->save();
-        return redirect()->route('supplier.index')->with('supplier_success_status', 'Supplier Updated');
+        return redirect()->back()->with('supplier_success_status', 'Supplier Updated');
     }
 
     /**
@@ -105,6 +110,6 @@ class SupplierController extends Controller
     public function deleteSelected(Request $request){
         $ids = $request['supplier_checkbox'];
         DB::table("suppliers")->whereIn('id',$ids)->delete();
-        return redirect()->route('supplier.index')->with('supplier_success_status', 'Supplier(s) Deleted');
+        return redirect()->back()->with('supplier_success_status', 'Supplier(s) Deleted');
     }
 }

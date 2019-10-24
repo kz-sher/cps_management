@@ -7,6 +7,7 @@ use App\Supplier;
 use App\ProductStockHistory;
 use Illuminate\Http\Request;
 use DB;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -41,17 +42,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'prod_name' => ['required', 'unique:products'],
-        ]);
+        // Manual Validator
+        $data = ['prod_name' => $request['new_prod_name']];
+        $rules = ['prod_name' => 'required|unique:products'];
+        $messages = [];
+        $custom_attrs = ['prod_name' => 'product name'];
 
+        $validator = Validator::make($data, $rules, $messages, $custom_attrs);
+
+        // Check if validator fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Else create new product
         $product = new Product([
-            "prod_name" => $request['prod_name'],
+            "prod_name" => $request['new_prod_name'],
             "curr_stock" => 0,
         ]);
 
         $product->save();
-        return redirect()->route('product.index')->with('product_success_status', 'Product Added');
+        return redirect()->back()->with('product_success_status', 'Product Added');
     }
 
     /**
@@ -85,26 +96,47 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        // Manual Validator
+        $data = [
+            'prod_name' => $request['update_prod_name'],
+            'curr_stock' => $request['update_stock'],
+        ];
+        $rules = [
             'prod_name' => ['required', 'unique:products,prod_name,'.$id],
-            'curr_stock' => ['required', 'min:1'],
-        ]);
+            'curr_stock' => ['integer', 'required', 'gt:0']
+        ];
+        $messages = [];
+        $custom_attrs = [
+            'prod_name' => 'product name',
+            'curr_stock' => 'stock given'
+        ];
 
-        $product = Product::find($id);
-        
+        $validator = Validator::make($data, $rules, $messages, $custom_attrs);
+
+        // Check if validator fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $product = Product::find($id);      
+
         $product_stock_history = new ProductStockHistory([
             "person_involved" => "Admin",
             "stock_status" => "Manual",
-            "stock_amount_status" => ($product['curr_stock'] > $request['curr_stock'])? "down" : "up",
-            "stock_amount" => $request['curr_stock'],
+            "old_prod_name" => $product['prod_name'],
+            "new_prod_name" => ($request['update_prod_name'] === $product['prod_name'])? '-': $request['update_prod_name'],
+            "stock_amount_status" => ($product['curr_stock'] > $request['update_stock'])? "down" : "up",
+            "original_stock_amount" => $product['curr_stock'],
+            "update_stock_amount" => $request['update_stock'] - $product['curr_stock'],
+            "curr_stock_amount" => $request['update_stock'],
         ]);
 
-        $product->prod_name = $request->get('prod_name');
-        $product->curr_stock = $request->get('curr_stock');
+        $product->prod_name = $request->get('update_prod_name');
+        $product->curr_stock = $request->get('update_stock');
 
         $product->save();
         $product_stock_history->save();
-        return redirect()->route('product.index')->with('product_success_status', 'Product Updated');
+        return redirect()->back()->with('product_success_status', 'Product Updated');
     }
 
     /**
@@ -128,26 +160,47 @@ class ProductController extends Controller
 
     public function importProduct(Request $request, $id)
     {
-        dd($request->all());
-        $this->validate($request, [
-            'supplier' => ['required'],
-            'import_stock' => ['required', 'min:1'],
-        ]);
+        // Manual Validator
+        $data = [
+            'prod_name' => $request['supplier'], // Stupid way to check as it belongs to stock histories
+            'curr_stock' => $request['import_stock'],
+        ];
+        $rules = [
+            'prod_name' => ['required'],
+            'curr_stock' => ['integer', 'required', 'gt:0']
+        ];
+        $messages = [];
+        $custom_attrs = [
+            'prod_name' => 'supplier',
+            'curr_stock' => 'stock given'
+        ];
 
+        $validator = Validator::make($data, $rules, $messages, $custom_attrs);
+
+        // Check if validator fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
         
         $product = Product::find($id);
+        $supplier = Supplier::find($request['supplier']);
 
         $product_stock_history = new ProductStockHistory([
-            "person_involved" => $request['supplier'],
+            "person_involved" => $supplier['name'],
             "stock_status" => "Import",
+            "old_prod_name" => $product['prod_name'],
+            "new_prod_name" => '-',
             "stock_amount_status" => "up",
             "stock_amount" => $request['import_stock'],
+            "original_stock_amount" => $product['curr_stock'],
+            "update_stock_amount" => $request['import_stock'],
+            "curr_stock_amount" => $product['curr_stock'] + $request['import_stock'],
         ]);
 
         $product->curr_stock += $request->get('import_stock');
 
         $product->save();
         $product_stock_history->save();
-        return redirect()->route('product.index')->with('product_success_status', 'Product Imported');
+        return redirect()->back()->with('product_success_status', 'Product Imported');
     }
 }
