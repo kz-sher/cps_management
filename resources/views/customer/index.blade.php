@@ -17,7 +17,7 @@
                     </li>
                 </ol>
             </nav>
-    
+
             <!-- Customer list -->
                 
             <div id="customer_list">
@@ -35,9 +35,12 @@
                     </div>
                 @endif
 
-                <!-- Customer Button Menu -->
+                <!-- Customer List Table Button Menu -->
 
                 <div class="d-flex flex-row">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="form-group h4">Customer List</div>
+                    </div>
                     <div class="d-flex flex-row flex-grow-1">
                     </div>
                     <div class="d-flex flex-row justify-content-end">
@@ -111,12 +114,12 @@
                   </div>
                 </div>
 
-                <!-- Customer Table -->
+                <!-- Customer List Table -->
 
                 <form method=post action="{{ url('customerDeleteSelected') }}" id="customer_list_form">
                     @method('delete')
                     @csrf
-                    <table class="table table-bordered table-hover table-responsive-lg shadow-sm" id="customer_table">
+                    <table class="table table-bordered table-hover table-responsive-lg shadow-sm" id="customer_list_table">
                         <thead class="thead-dark">
                             <tr>
                                 <th width="5%">
@@ -139,9 +142,9 @@
                                     </td>
                                     <td id="customer_name{{ $row['id'] }}">{{ $row['name']}}</td>
                                     <td>
-                                        <a class="btn btn-success update_customer_modal_button" data-toggle="modal" data-target="#update_customer_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('CustomerController@update', $row['id']) }}">
+                                        <!-- <a class="btn btn-success update_customer_modal_button" data-toggle="modal" data-target="#update_customer_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('CustomerController@update', $row['id']) }}">
                                             <i class="fas fa-edit text-white"></i>
-                                        </a>
+                                        </a> -->
                                         <a class="btn btn-purple update_customer_modal_button" href="{{ action('CustomerController@show', $row['id']) }}">
                                             <i class="fas fa-chart-line text-white"></i>
                                         </a>
@@ -151,7 +154,7 @@
                         </tbody>
                     </table> 
                 </form> 
-            </div>    
+            </div>   
 
         </div>
     </div>
@@ -186,7 +189,7 @@ $( document ).ready(function() {
     });
 
     // Disable delete button if no entry found
-    if( $('#customer_table').find('.customer_checkbox').length === 0 ){
+    if( $('#customer_list_table').find('.customer_checkbox').length === 0 ){
         $('#customer_bulk_delete_button').attr('disabled', true);
     }
 

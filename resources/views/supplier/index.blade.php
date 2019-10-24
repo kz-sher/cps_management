@@ -139,9 +139,9 @@
                                     </td>
                                     <td id="supplier_name{{ $row['id'] }}">{{ $row['name']}}</td>
                                     <td>
-                                        <a class="btn btn-success update_supplier_modal_button" data-toggle="modal" data-target="#update_supplier_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('SupplierController@update', $row['id']) }}">
+                                        <!-- <a class="btn btn-success update_supplier_modal_button" data-toggle="modal" data-target="#update_supplier_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('SupplierController@update', $row['id']) }}">
                                             <i class="fas fa-edit text-white"></i>
-                                        </a>
+                                        </a> -->
                                         <a class="btn btn-purple update_supplier_modal_button" href="{{ action('SupplierController@show', $row['id']) }}">
                                             <i class="fas fa-chart-line text-white"></i>
                                         </a>

@@ -41,6 +41,9 @@
                 <!-- Customer Transaction Button Menu -->
 
                 <div class="d-flex flex-row">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="form-group h4">Customer Transactions</div>
+                    </div>
                     <div class="d-flex flex-row flex-grow-1">
                     </div>
                     <div class="d-flex flex-row justify-content-end">
@@ -238,6 +241,47 @@
                         </tbody>
                     </table> 
                 </form> 
+            </div>
+
+            <!-- Row Spacer -->
+            
+            <div class="pb-3"></div>
+
+            <!-- Customer Rent/Return -->
+            
+            <div id="customer_rent_return">
+                
+                <!-- Customer Rent/Return Table Title -->
+
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="form-group h4">Customer Rent/Return Details</div>
+                    </div>
+                </div>
+
+                <!-- Customer Rent/Return Table -->
+                
+                <table class="table table-bordered table-hover shadow-sm col-md-6" id="customer_rent_return_table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th width="50%">Products</th>
+                            <th width="50%">Amount Rented</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        @if (count($customer_rent_return_details) === 0)
+                            <tr>
+                                <td colspan="100%">No customer details found</td>
+                            </tr>
+                        @endif
+                        @foreach ($customer_rent_return_details as $row)
+                            <tr>
+                                <td>{{ $row['product'] }}</td>
+                                <td>{{ $row['amount'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div> 
 
         </div>

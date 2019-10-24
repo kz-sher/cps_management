@@ -155,7 +155,7 @@ class ProductController extends Controller
     public function deleteSelected(Request $request){
         $ids = $request['product_checkbox'];
         DB::table("products")->whereIn('id',$ids)->delete();
-        return redirect()->route('product.index')->with('product_success_status', 'Product(s) Deleted');
+        return redirect()->back()->with('product_success_status', 'Product(s) Deleted');
     }
 
     public function importProduct(Request $request, $id)

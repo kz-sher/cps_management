@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Customer;
 use App\Product;
 use App\CustomerTransaction;
+use App\CustomerRentReturnDetails;
 use Illuminate\Http\Request;
 use DB;
 
@@ -44,7 +45,8 @@ class CustomerController extends Controller
         ]);
 
         $customer = new Customer([
-            "name" => $request['name']
+            "name" => $request['name'],
+            "debt" => 0
         ]);
 
         $customer->save();
@@ -62,7 +64,8 @@ class CustomerController extends Controller
         $customer = Customer::find($id);
         $products = Product::all()->toArray();
         $customer_transactions = CustomerTransaction::where('customer_id', $id)->get()->toArray();
-        return view('customer.show', compact('customer', 'products', 'customer_transactions'));
+        $customer_rent_return_details = CustomerRentReturnDetails::where('customer_id', $id)->get()->toArray();
+        return view('customer.show', compact('customer', 'products', 'customer_transactions', 'customer_rent_return_details'));
     }
 
     /**

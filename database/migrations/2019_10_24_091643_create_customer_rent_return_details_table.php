@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCustomerTransactionsTable extends Migration
+class CreateCustomerRentReturnDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class CreateCustomerTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('customer_transactions', function (Blueprint $table) {
+        Schema::create('customer_rent_return_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->bigInteger('product_id')->unsigned();
             $table->foreign('product_id')->references('id')->on('products');
             $table->string('product');
-            $table->date('date');
-            $table->string('description');
-            $table->integer('quantity');
-            $table->float('rate');
-            $table->string('status');
+            $table->integer('amount');
             $table->timestamps();
         });
     }
@@ -36,6 +32,6 @@ class CreateCustomerTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customer_transactions');
+        Schema::dropIfExists('customer_rent_return_details');
     }
 }

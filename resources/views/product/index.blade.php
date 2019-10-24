@@ -21,9 +21,9 @@
             <!-- Product Section -->
 
             <div id="product_inventory">
-                @if (session('customer_transaction_success_status'))
+                @if (session('product_success_status'))
                     <div class="alert alert-success" role="alert">
-                        {{ session('customer_transaction_success_status') }}
+                        {{ session('product_success_status') }}
                     </div>
                 @endif
 
@@ -191,9 +191,9 @@
                                     <td id="product_name{{ $row['id'] }}">{{ $row['prod_name']}}</td>
                                     <td id="product_stock{{ $row['id'] }}">{{ $row['curr_stock']}}</td>
                                     <td>
-                                        <a class="btn btn-success update_product_modal_button" data-toggle="modal" data-target="#update_product_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('ProductController@update', $row['id']) }}">
+                                        <!-- <a class="btn btn-success update_product_modal_button" data-toggle="modal" data-target="#update_product_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('ProductController@update', $row['id']) }}">
                                             <i class="fas fa-edit text-white"></i>
-                                        </a>
+                                        </a> -->
                                         <a class="btn btn-purple import_product_modal_button" data-toggle="modal" data-target="#import_product_modal_box" data-whatever="@getbootstrap" data-id="{{ $row['id'] }}" data-url="{{ action('ProductController@importProduct', $row['id']) }}">
                                             <i class="fas fa-truck text-white"></i>
                                         </a>

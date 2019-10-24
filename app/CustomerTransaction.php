@@ -9,8 +9,8 @@ class CustomerTransaction extends Model
     protected $fillable = [
     	'customer_id',
     	'product_id',
-    	'date',
     	'product',
+    	'date',
     	'description',
     	'quantity',
     	'rate',
