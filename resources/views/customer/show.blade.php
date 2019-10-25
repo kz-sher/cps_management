@@ -87,6 +87,9 @@
                           </div>
                           <div class="form-group">
                             <label for="customer_transaction_prod" class="col-form-label">Product:</label>
+                            <span data-toggle="tooltip" data-placement="right" title="If no option shown, please add at least one product under product list">
+                                <i class="ml-1 fas fa-info-circle"></i>
+                            </span>
                             <select type="text" name="customer_transaction_prod" class="form-control" id="customer_transaction_prod">
                                 @if (count($products) === 0)
                                     <option selected disabled>No option</option>
@@ -156,6 +159,9 @@
                           </div>
                           <div class="form-group">
                             <label for="update_customer_transaction_prod" class="col-form-label">Product:</label>
+                            <span data-toggle="tooltip" data-placement="right" title="If no option shown, please add at least one product under product list">
+                                <i class="ml-1 fas fa-info-circle"></i>
+                            </span>
                             <select type="text" name="update_customer_transaction_prod" class="form-control" id="update_customer_transaction_prod">
                                 @if (count($products) === 0)
                                     <option selected disabled>No option</option>
@@ -261,7 +267,7 @@
 
                 <!-- Customer Rent/Return Table -->
                 
-                <table class="table table-bordered table-hover shadow-sm col-md-6" id="customer_rent_return_table">
+                <table class="table table-bordered shadow-sm col-md-6" id="customer_rent_return_table">
                     <thead class="thead-dark">
                         <tr>
                             <th width="50%">Products</th>
@@ -276,8 +282,8 @@
                         @endif
                         @foreach ($customer_rent_return_details as $row)
                             <tr>
-                                <td>{{ $row['product'] }}</td>
-                                <td>{{ $row['amount'] }}</td>
+                                <td>{{ $row['prod_name'] }}</td>
+                                <td>{{ $row['quantity'] }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -353,8 +359,11 @@ $( document ).ready(function() {
 
     // Calendar button click event that triggers datepicker form field to be focused
     $('.calendar-btn').click(function(){
-        $('.datepicker').focus();
+        $(this).parents('.input-group').find('.datepicker').focus();
     });
+
+    // Enable Tooltips    
+    $('[data-toggle="tooltip"]').tooltip();   
 
 });
 </script>

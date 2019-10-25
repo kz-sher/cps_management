@@ -1,6 +1,19 @@
+// Detect table row click that checks the corresponding checkbox
+$('tr').on('click', function(e) {
+    if ($(event.target).is('a') || $(event.target).is('i')){
+         return;
+    }
+    var row_checkbox = $(this).find("input[type='checkbox']");
+    if(row_checkbox.prop('checked') == true) {
+        row_checkbox.prop('checked', false);
+    }
+    else{
+        row_checkbox.prop('checked', true);
+    }
+});
+
 // Full screen loading effect
 $('.full-spinner-loader').click(function(){
-    console.log('asd');
     $('#full-spinner-overlay').css('display','flex');
 });
 
@@ -10,3 +23,4 @@ window.setTimeout(function() {
         $(this).remove(); 
     });
 }, 4000);
+

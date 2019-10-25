@@ -38,6 +38,9 @@
                 <!-- Supplier Button Menu -->
 
                 <div class="d-flex flex-row">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="form-group h4">Supplier List</div>
+                    </div>
                     <div class="d-flex flex-row flex-grow-1">
                     </div>
                     <div class="d-flex flex-row justify-content-end">

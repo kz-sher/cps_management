@@ -32,6 +32,3 @@ Route::delete('productDeleteSelected', 'ProductController@deleteSelected');
 Route::delete('supplierDeleteSelected', 'SupplierController@deleteSelected');
 Route::delete('customerTransactionDeleteSelected', 'CustomerTransactionController@deleteSelected');
 Route::delete('supplierTransactionDeleteSelected', 'SupplierTransactionController@deleteSelected');
-Route::delete('clearStockHistory', 'ProductStockHistoryController@clearHistory');
-
-Route::patch('importProduct/{id}', 'ProductController@importProduct');

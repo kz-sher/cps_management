@@ -62,7 +62,23 @@ class SupplierController extends Controller
         $supplier = Supplier::find($id);
         $products = Product::all()->toArray();
         $supplier_transactions = SupplierTransaction::where('supplier_id', $id)->get()->toArray();
-        return view('supplier.show', compact('supplier', 'products', 'supplier_transactions'));
+
+        // Generate supplier import return details from supplier transactions 
+        $raw_details = SupplierTransaction::where('supplier_id', $id)
+                                    ->select('product', 'status', DB::raw('sum(supplier_transactions.quantity) quantity'))
+                                    ->groupBy('product', 'status')
+                                    ->get()
+                                    ->toArray();
+        $supplier_import_return_details = Product::select('prod_name')->addSelect(DB::raw("0 as quantity"))->get()->keyBy('prod_name')->toArray();
+        foreach($raw_details as $entry){
+            if($entry['status'] === 'Import'){
+                $supplier_import_return_details[$entry['product']]['quantity'] += $entry['quantity'];
+            }
+            else{
+                $supplier_import_return_details[$entry['product']]['quantity'] -= $entry['quantity'];
+            }
+        }
+        return view('supplier.show', compact('supplier', 'products', 'supplier_transactions', 'supplier_import_return_details'));
     }
 
     /**

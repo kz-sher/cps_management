@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Customer;
 use App\Product;
 use App\CustomerTransaction;
-use App\CustomerRentReturnDetails;
 use Illuminate\Http\Request;
 use DB;
 
@@ -64,7 +63,22 @@ class CustomerController extends Controller
         $customer = Customer::find($id);
         $products = Product::all()->toArray();
         $customer_transactions = CustomerTransaction::where('customer_id', $id)->get()->toArray();
-        $customer_rent_return_details = CustomerRentReturnDetails::where('customer_id', $id)->get()->toArray();
+        
+        // Generate customer rent return details from customer transactions 
+        $raw_details = CustomerTransaction::where('customer_id', $id)
+                                    ->select('product', 'status', DB::raw('sum(customer_transactions.quantity) quantity'))
+                                    ->groupBy('product', 'status')
+                                    ->get()
+                                    ->toArray();
+        $customer_rent_return_details = Product::select('prod_name')->addSelect(DB::raw("0 as quantity"))->get()->keyBy('prod_name')->toArray();
+        foreach($raw_details as $entry){
+            if($entry['status'] === 'Rent'){
+                $customer_rent_return_details[$entry['product']]['quantity'] += $entry['quantity'];
+            }
+            else{
+                $customer_rent_return_details[$entry['product']]['quantity'] -= $entry['quantity'];
+            }
+        }
         return view('customer.show', compact('customer', 'products', 'customer_transactions', 'customer_rent_return_details'));
     }
 

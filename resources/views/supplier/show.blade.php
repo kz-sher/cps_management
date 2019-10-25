@@ -1,4 +1,4 @@
-@extends('layouts.app')
+ @extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -41,6 +41,9 @@
                 <!-- Supplier Transaction Button Menu -->
 
                 <div class="d-flex flex-row">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="form-group h4">Supplier Transactions</div>
+                    </div>
                     <div class="d-flex flex-row flex-grow-1">
                     </div>
                     <div class="d-flex flex-row justify-content-end">
@@ -121,13 +124,13 @@
                   </div>
                 </div>
 
-                <!-- supplier Transaction Modal Box - Update -->
+                <!-- Supplier Transaction Modal Box - Update -->
 
                 <div class="modal fade" id="update_supplier_transaction_modal_box" tabindex="-1" role="dialog" aria-labelledby="update_supplier_transaction_modal_box_label" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">Supplier Transaction #<span id="update_supplier_transaction_modal_box_label"></span></h5>
+                        <h5 class="modal-title">supplier Transaction #<span id="update_supplier_transaction_modal_box_label"></span></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -228,6 +231,47 @@
                         </tbody>
                     </table> 
                 </form> 
+            </div>
+
+            <!-- Row Spacer -->
+            
+            <div class="pb-3"></div>
+
+            <!-- Supplier Import/Return -->
+            
+            <div id="supplier_import_return">
+                
+                <!-- Supplier Import/Return Table Title -->
+
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="form-group h4">Supplier Import/Return Details</div>
+                    </div>
+                </div>
+
+                <!-- Supplier Import/Return Table -->
+                
+                <table class="table table-bordered shadow-sm col-md-6" id="supplier_import_return_table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th width="50%">Products</th>
+                            <th width="50%">Amount Imported</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        @if (count($supplier_import_return_details) === 0)
+                            <tr>
+                                <td colspan="100%">No supplier details found</td>
+                            </tr>
+                        @endif
+                        @foreach ($supplier_import_return_details as $row)
+                            <tr>
+                                <td>{{ $row['prod_name'] }}</td>
+                                <td>{{ $row['quantity'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div> 
 
         </div>
@@ -251,6 +295,17 @@ $( document ).ready(function() {
         }
     });
 
+    // Detect table row click that checks the corresponding checkbox
+    $('tr').click(function() {
+        var row_checkbox = $(this).find('.product_checkbox');
+        if(row_checkbox.prop('checked') == true) {
+            row_checkbox.prop('checked', false);
+        }
+        else{
+            row_checkbox.prop('checked', true);
+        }
+    });
+    
     // Delete button outside the form
     $('#supplier_transaction_bulk_delete_button').on('click', function(e) {
         if( $('.supplier_transaction_checkbox:checked').length > 0){
@@ -297,7 +352,7 @@ $( document ).ready(function() {
 
     // Calendar button click event that triggers datepicker form field to be focused
     $('.calendar-btn').click(function(){
-        $('.datepicker').focus();
+        $(this).parents('.input-group').find('.datepicker').focus();
     });
 
 });
