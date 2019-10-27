@@ -54,18 +54,18 @@
                             </li>
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('customer') }}">
+                                <a class="nav-link" href="{{ url('customers') }}">
                                     <span class="fas fa-users"></span> Customers
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('product') }}">
+                                <a class="nav-link" href="{{ url('products') }}">
                                     <span class="fas fa-box-open"></span> Products
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('supplier') }}">
-                                    <span class="fas fa-truck"></span> Supplier
+                                <a class="nav-link" href="{{ url('suppliers') }}">
+                                    <span class="fas fa-truck"></span> Suppliers
                                 </a>
                             </li>
                             <li class="nav-item dropdown">

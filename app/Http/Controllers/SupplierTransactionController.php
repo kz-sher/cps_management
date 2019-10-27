@@ -212,6 +212,36 @@ class SupplierTransactionController extends Controller
 
     public function deleteSelected(Request $request){
         $ids = $request['supplier_transaction_checkbox'];
+        // Retrive all transactions and rollback all changes to products involved
+        $transactions = SupplierTransaction::find($ids);
+        $products = array();
+        
+        // Get all supplier transaction rollback
+        foreach ($transactions as $transaction){
+            $product = Product::find($transaction['product_id']);
+            if (array_key_exists($product['prod_name'], $products)){
+                $product = $products[$product['prod_name']];
+            }
+            SupplierTransactionController::updateProductStock($product, $transaction['status'], $transaction['quantity'], false);
+            $products[$product['prod_name']] = $product;
+        }
+
+        // Check if product stock is sufficient when return required
+        $fail_flag = false;
+        foreach ($products as $product){
+            if (!$product->isValidStock()){        
+                $fail_flag = true;
+            }
+        }
+
+        // Notify with error if fail flag will be turned true
+        if ($fail_flag){
+            return redirect()->back()->withErrors([ Product::showInvalidDeleteError() ]);
+        }
+
+        foreach ($products as $product) {
+            $product->save();
+        }
         DB::table("supplier_transactions")->whereIn('id',$ids)->delete();
         return redirect()->back()->with('supplier_transaction_success_status', 'Supplier Transaction(s) Deleted');
     }

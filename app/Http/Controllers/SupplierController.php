@@ -17,7 +17,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::all()->toArray();
+        $suppliers = Supplier::paginate(10);
         return view('supplier.index', compact('suppliers'));
     }
 
@@ -61,7 +61,7 @@ class SupplierController extends Controller
     {
         $supplier = Supplier::find($id);
         $products = Product::all()->toArray();
-        $supplier_transactions = SupplierTransaction::where('supplier_id', $id)->get()->toArray();
+        $supplier_transactions = SupplierTransaction::where('supplier_id', $id)->paginate(10);
 
         // Generate supplier import return details from supplier transactions 
         $raw_details = SupplierTransaction::where('supplier_id', $id)

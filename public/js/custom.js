@@ -1,6 +1,6 @@
 // Detect table row click that checks the corresponding checkbox
-$('tr').on('click', function(e) {
-    if ($(event.target).is('a') || $(event.target).is('i')){
+$('tbody tr').on('click', function(e) {
+    if ($(event.target).is('a') || $(event.target).is('i') || $(event.target).is('input')){
          return;
     }
     var row_checkbox = $(this).find("input[type='checkbox']");

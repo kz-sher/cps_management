@@ -87,6 +87,9 @@
                           </div>
                           <div class="form-group">
                             <label for="supplier_transaction_prod" class="col-form-label">Product:</label>
+                            <span data-toggle="tooltip" data-placement="right" title="If no option shown, please add at least one product under product list">
+                                <i class="ml-1 fas fa-info-circle"></i>
+                            </span>
                             <select type="text" name="supplier_transaction_prod" class="form-control" id="supplier_transaction_prod">
                                 @if (count($products) === 0)
                                     <option selected disabled>No option</option>
@@ -130,7 +133,7 @@
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">supplier Transaction #<span id="update_supplier_transaction_modal_box_label"></span></h5>
+                        <h5 class="modal-title">Supplier Transaction #<span id="update_supplier_transaction_modal_box_label"></span></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -152,6 +155,9 @@
                           </div>
                           <div class="form-group">
                             <label for="update_supplier_transaction_prod" class="col-form-label">Product:</label>
+                            <span data-toggle="tooltip" data-placement="right" title="If no option shown, please add at least one product under product list">
+                                <i class="ml-1 fas fa-info-circle"></i>
+                            </span>
                             <select type="text" name="update_supplier_transaction_prod" class="form-control" id="update_supplier_transaction_prod">
                                 @if (count($products) === 0)
                                     <option selected disabled>No option</option>
@@ -230,7 +236,35 @@
                             @endforeach
                         </tbody>
                     </table> 
-                </form> 
+                </form>
+
+                <!-- Pagination -->
+
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-row">
+
+                    </div>
+                    <div class="d-flex flex-row flex-grow-1">
+                        @if($supplier_transactions->total() !== 0)
+                            Showing
+                            {{ $supplier_transactions->currentPage()*10-9 }}
+                            - 
+                            @if($supplier_transactions->currentPage()*10 <= $supplier_transactions->total())
+                                {{ $supplier_transactions->currentPage()*10 }}
+                            @else
+                                {{$supplier_transactions->total()}}
+                            @endif
+                            result(s)
+                            (Out of {{$supplier_transactions->total()}})
+                        @else
+                            Showing 0 result
+                        @endif
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        {{$supplier_transactions->links('pagination.default')}}
+                    </div>
+                </div>
+
             </div>
 
             <!-- Row Spacer -->
@@ -286,23 +320,12 @@
 $( document ).ready(function() {
     
     // Main checkbox toggle that either selects or de-selects all sub-checkboxes
-    $('.supplier_transaction_bulk_checkbox').change(function() {
+    $('.supplier_transaction_bulk_checkbox').on('change', function() {
         if(this.checked) {
             $('.supplier_transaction_checkbox').prop('checked', true);
         }
         else{
             $('.supplier_transaction_checkbox').prop('checked', false);
-        }
-    });
-
-    // Detect table row click that checks the corresponding checkbox
-    $('tr').click(function() {
-        var row_checkbox = $(this).find('.product_checkbox');
-        if(row_checkbox.prop('checked') == true) {
-            row_checkbox.prop('checked', false);
-        }
-        else{
-            row_checkbox.prop('checked', true);
         }
     });
     
@@ -344,6 +367,9 @@ $( document ).ready(function() {
         $('#update_supplier_transaction_form').attr('action', url);
     });
 
+    // Enable Tooltips    
+    $('[data-toggle="tooltip"]').tooltip(); 
+
     // Date Picker
     $('.datepicker').datepicker({
         dateFormat: "dd-mm-yy",
@@ -351,9 +377,9 @@ $( document ).ready(function() {
     });
 
     // Calendar button click event that triggers datepicker form field to be focused
-    $('.calendar-btn').click(function(){
+    $('.calendar-btn').click(function(e){
         $(this).parents('.input-group').find('.datepicker').focus();
-    });
+    });  
 
 });
 </script>

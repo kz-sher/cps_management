@@ -246,7 +246,35 @@
                             @endforeach
                         </tbody>
                     </table> 
-                </form> 
+                </form>
+
+                <!-- Pagination -->
+
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-row">
+
+                    </div>
+                    <div class="d-flex flex-row flex-grow-1">
+                        @if($customer_transactions->total() !== 0)
+                            Showing
+                            {{ $customer_transactions->currentPage()*10-9 }}
+                            - 
+                            @if($customer_transactions->currentPage()*10 <= $customer_transactions->total())
+                                {{ $customer_transactions->currentPage()*10 }}
+                            @else
+                                {{$customer_transactions->total()}}
+                            @endif
+                            result(s)
+                            (Out of {{$customer_transactions->total()}})
+                        @else
+                            Showing 0 result
+                        @endif
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        {{$customer_transactions->links('pagination.default')}}
+                    </div>
+                </div>
+
             </div>
 
             <!-- Row Spacer -->
@@ -351,6 +379,9 @@ $( document ).ready(function() {
         $('#update_customer_transaction_form').attr('action', url);
     });
 
+    // Enable Tooltips    
+    $('[data-toggle="tooltip"]').tooltip(); 
+
     // Date Picker
     $('.datepicker').datepicker({
         dateFormat: "dd-mm-yy",
@@ -358,12 +389,9 @@ $( document ).ready(function() {
     });
 
     // Calendar button click event that triggers datepicker form field to be focused
-    $('.calendar-btn').click(function(){
+    $('.calendar-btn').click(function(e){
         $(this).parents('.input-group').find('.datepicker').focus();
     });
-
-    // Enable Tooltips    
-    $('[data-toggle="tooltip"]').tooltip();   
 
 });
 </script>

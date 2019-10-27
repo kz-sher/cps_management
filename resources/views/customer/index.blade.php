@@ -154,6 +154,32 @@
                         </tbody>
                     </table> 
                 </form> 
+
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-row">
+
+                    </div>
+                    <div class="d-flex flex-row flex-grow-1">
+                        @if($customers->total() !== 0)
+                            Showing
+                            {{ $customers->currentPage()*10-9 }}
+                            - 
+                            @if($customers->currentPage()*10 <= $customers->total())
+                                {{ $customers->currentPage()*10 }}
+                            @else
+                                {{$customers->total()}}
+                            @endif
+                            result(s)
+                            (Out of {{$customers->total()}})
+                        @else
+                            Showing 0 result
+                        @endif
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                        {{$customers->links('pagination.default')}}
+                    </div>
+                </div>
+
             </div>   
 
         </div>

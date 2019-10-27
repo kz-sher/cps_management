@@ -8,6 +8,7 @@ class Product extends Model
 {
     protected $fillable = ['prod_name', 'curr_stock'];
     public static $invalid_stock_error = 'You have no enough product stock for chosen product';
+    public static $invalid_delete_error = 'Invalid delete as no enough product stock for updating chosen product';
 
 	public function isValidStock(){
 		return $this->attributes['curr_stock'] >= 0;
@@ -31,6 +32,10 @@ class Product extends Model
 
 	public static function showInvalidStockError(){
 		return Product::$invalid_stock_error;
+	}
+
+	public static function showInvalidDeleteError(){
+		return Product::$invalid_delete_error;
 	}
 
 	public function description(){ 

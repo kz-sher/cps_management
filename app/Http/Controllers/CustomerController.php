@@ -17,7 +17,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all()->toArray();
+        $customers = Customer::paginate(10);
         return view('customer.index', compact('customers'));
     }
 
@@ -62,7 +62,7 @@ class CustomerController extends Controller
     {
         $customer = Customer::find($id);
         $products = Product::all()->toArray();
-        $customer_transactions = CustomerTransaction::where('customer_id', $id)->get()->toArray();
+        $customer_transactions = CustomerTransaction::where('customer_id', $id)->paginate(10);
         
         // Generate customer rent return details from customer transactions 
         $raw_details = CustomerTransaction::where('customer_id', $id)
