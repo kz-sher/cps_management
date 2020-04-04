@@ -3,3 +3,6 @@ This project is a small laravel-based inventory management system. In this case,
 
 ### Additional Lesson Learned
 The knowledge that I always ignore is to have a proper step-by-step blueprint before really getting into building the system. It is noticed that `UML Design` is actually very useful for knowing how many databases (technically, tables in MySQL) we should have and how they are going to interact with others.
+
+### Got question?
+> kzsherdev@gmail.com
